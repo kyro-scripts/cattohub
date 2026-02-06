@@ -1,0 +1,1975 @@
+-- Kyro Key System & Frontlines Script - ENHANCED LOW UNC VERSION v3.0
+-- Discord: https://discord.gg/Mj2p8AFDQj
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+local GuiService = game:GetService("GuiService")
+local TweenService = game:GetService("TweenService")
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+-- ==================== KEY SYSTEM ====================
+
+local CORRECT_KEY = "KYRO2026"  -- Change this to your desired key
+local DISCORD_LINK = "https://discord.gg/Mj2p8AFDQj"
+
+-- Create Key System GUI
+local KeySystemGui = Instance.new("ScreenGui")
+KeySystemGui.Name = "KyroKeySystem"
+KeySystemGui.ResetOnSpawn = false
+KeySystemGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+KeySystemGui.DisplayOrder = 10000
+
+pcall(function() KeySystemGui.Parent = game:GetService("CoreGui") end)
+if not KeySystemGui.Parent then
+    KeySystemGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+-- Simple dark background
+local BlurFrame = Instance.new("Frame")
+BlurFrame.Name = "BlurFrame"
+BlurFrame.Size = UDim2.new(1, 0, 1, 0)
+BlurFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+BlurFrame.BackgroundTransparency = 0.4
+BlurFrame.BorderSizePixel = 0
+BlurFrame.Parent = KeySystemGui
+
+-- Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 400, 0, 280)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = KeySystemGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 16)
+MainCorner.Parent = MainFrame
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(138, 43, 226)
+MainStroke.Thickness = 2
+MainStroke.Parent = MainFrame
+
+-- Title
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Size = UDim2.new(1, 0, 0, 60)
+Title.Position = UDim2.new(0, 0, 0, 30)
+Title.BackgroundTransparency = 1
+Title.Text = "KYRO"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 38
+Title.TextColor3 = Color3.fromRGB(138, 43, 226)
+Title.Parent = MainFrame
+
+-- Subtitle
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Name = "Subtitle"
+Subtitle.Size = UDim2.new(1, 0, 0, 20)
+Subtitle.Position = UDim2.new(0, 0, 0, 90)
+Subtitle.BackgroundTransparency = 1
+Subtitle.Text = "Authentication Required"
+Subtitle.Font = Enum.Font.Gotham
+Subtitle.TextSize = 12
+Subtitle.TextColor3 = Color3.fromRGB(150, 150, 160)
+Subtitle.Parent = MainFrame
+
+-- Discord Button
+local DiscordButton = Instance.new("TextButton")
+DiscordButton.Name = "DiscordButton"
+DiscordButton.Size = UDim2.new(1, -60, 0, 42)
+DiscordButton.Position = UDim2.new(0, 30, 0, 120)
+DiscordButton.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+DiscordButton.BorderSizePixel = 0
+DiscordButton.Text = "Copy Discord"
+DiscordButton.Font = Enum.Font.GothamBold
+DiscordButton.TextSize = 14
+DiscordButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordButton.AutoButtonColor = false
+DiscordButton.Parent = MainFrame
+
+local DiscordCorner = Instance.new("UICorner")
+DiscordCorner.CornerRadius = UDim.new(0, 10)
+DiscordCorner.Parent = DiscordButton
+
+-- Key Input
+local KeyInput = Instance.new("TextBox")
+KeyInput.Name = "KeyInput"
+KeyInput.Size = UDim2.new(1, -60, 0, 42)
+KeyInput.Position = UDim2.new(0, 30, 0, 175)
+KeyInput.BackgroundColor3 = Color3.fromRGB(30, 30, 38)
+KeyInput.BorderSizePixel = 0
+KeyInput.Text = ""
+KeyInput.PlaceholderText = "Enter Key..."
+KeyInput.Font = Enum.Font.GothamMedium
+KeyInput.TextSize = 14
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.PlaceholderColor3 = Color3.fromRGB(100, 100, 110)
+KeyInput.ClearTextOnFocus = false
+KeyInput.Parent = MainFrame
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 10)
+InputCorner.Parent = KeyInput
+
+local InputStroke = Instance.new("UIStroke")
+InputStroke.Color = Color3.fromRGB(50, 50, 65)
+InputStroke.Thickness = 1
+InputStroke.Parent = KeyInput
+
+-- Status Label
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Name = "StatusLabel"
+StatusLabel.Size = UDim2.new(1, -60, 0, 20)
+StatusLabel.Position = UDim2.new(0, 30, 0, 230)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = ""
+StatusLabel.Font = Enum.Font.GothamBold
+StatusLabel.TextSize = 12
+StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Center
+StatusLabel.Parent = MainFrame
+
+-- Simple button hover
+DiscordButton.MouseEnter:Connect(function()
+    TweenService:Create(DiscordButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(108, 121, 255)}):Play()
+end)
+
+DiscordButton.MouseLeave:Connect(function()
+    TweenService:Create(DiscordButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(88, 101, 242)}):Play()
+end)
+
+-- Discord Button Functionality
+DiscordButton.MouseButton1Click:Connect(function()
+    setclipboard(DISCORD_LINK)
+    DiscordButton.Text = "✓ Copied!"
+    DiscordButton.BackgroundColor3 = Color3.fromRGB(67, 181, 129)
+    wait(1.5)
+    DiscordButton.Text = "Copy Discord"
+    DiscordButton.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+end)
+
+-- Input Focus Animation
+KeyInput.Focused:Connect(function()
+    TweenService:Create(InputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(138, 43, 226), Thickness = 2}):Play()
+end)
+
+KeyInput.FocusLost:Connect(function()
+    TweenService:Create(InputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(50, 50, 65), Thickness = 1}):Play()
+end)
+
+-- Key Validation
+local function ValidateKey(key)
+    return key == CORRECT_KEY
+end
+
+local function ShowStatus(message, isSuccess)
+    StatusLabel.Text = message
+    StatusLabel.TextColor3 = isSuccess and Color3.fromRGB(67, 181, 129) or Color3.fromRGB(255, 100, 100)
+    
+    if isSuccess then
+        -- Success animation
+        TweenService:Create(MainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 450, 0, 0)}):Play()
+        wait(0.3)
+        KeySystemGui:Destroy()
+    else
+        -- Shake animation on failure
+        local originalPos = MainFrame.Position
+        for i = 1, 3 do
+            TweenService:Create(MainFrame, TweenInfo.new(0.05), {Position = originalPos + UDim2.new(0, 10, 0, 0)}):Play()
+            wait(0.05)
+            TweenService:Create(MainFrame, TweenInfo.new(0.05), {Position = originalPos - UDim2.new(0, 10, 0, 0)}):Play()
+            wait(0.05)
+        end
+        TweenService:Create(MainFrame, TweenInfo.new(0.05), {Position = originalPos}):Play()
+        wait(1.5)
+        StatusLabel.Text = ""
+    end
+end
+
+-- Auto-submit on correct key
+KeyInput:GetPropertyChangedSignal("Text"):Connect(function()
+    local inputText = KeyInput.Text
+    if ValidateKey(inputText) then
+        ShowStatus("✓ Key Accepted! Loading...", true)
+        wait(0.5)
+        -- Load main script
+        LoadMainScript()
+    end
+end)
+
+-- Entrance animation
+MainFrame.Size = UDim2.new(0, 400, 0, 0)
+TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 400, 0, 280)}):Play()
+
+-- ==================== MAIN SCRIPT (Loads after key validation) ====================
+
+function LoadMainScript()
+
+local mousemoverel = mousemoverel or (Input and Input.MouseMove) or nil
+
+-- Configuration
+local Config = {
+    -- ESP Settings
+    ESP_Enabled = false,
+    ESP_NameTags = false,
+    ESP_Distance = false,
+    ESP_LookDirection = false,
+    ESP_Offscreen = false,
+    ESP_Heatmap = false,
+    ESP_MaxDist = 1500,
+    ESP_DeadCheck = true,
+    
+    -- Radar Settings
+    RADAR_Enabled = false,
+    RADAR_Size = 130,
+    RADAR_Range = 200,
+    
+    -- Aimbot Settings
+    AIM_Enabled = false,
+    AIM_FOV = 250,
+    AIM_ShowFOV = true,
+    AIM_Smooth = 0.12,
+    AIM_TargetPart = "Auto",
+    
+    -- Gun Mods
+    GUN_NoRecoil = false,
+    GUN_ReduceRecoil = 0,
+    GUN_NoSway = false,
+    GUN_NoSpread = false,
+    
+    -- Movement
+    MOVE_Noclip = false,
+    MOVE_Speed = 16,
+    MOVE_SpeedEnabled = false,
+    
+    -- Visual
+    VIS_FullBright = false,
+    VIS_ESPPreview = true,
+    
+    -- Combat
+    COMBAT_AutoClick = false,
+    COMBAT_AutoClickDelay = 50,
+    COMBAT_KillSay = false,
+    COMBAT_KillSayMessage = "ez"
+}
+
+-- Colors
+local Palette = {
+    Enemy = Color3.fromRGB(220, 60, 60),
+    Dead = Color3.fromRGB(90, 90, 95),
+    FOV_Circle = Color3.fromRGB(255, 255, 255),
+    FOV_Active = Color3.fromRGB(80, 255, 120),
+    LookDirection = Color3.fromRGB(255, 220, 80),
+    Offscreen = Color3.fromRGB(255, 200, 80),
+    HeatNear = Color3.fromRGB(255, 40, 40),
+    HeatFar = Color3.fromRGB(40, 40, 255),
+    RadarBg = Color3.fromRGB(15, 15, 18),
+    RadarBorder = Color3.fromRGB(220, 60, 60),
+    RadarGrid = Color3.fromRGB(35, 35, 40),
+    RadarYou = Color3.fromRGB(80, 255, 120)
+}
+
+-- State
+local State = {
+    Unloaded = false,
+    Aiming = false,
+    RainbowHue = 0,
+    UIVisible = true,
+    AutoClicking = false,
+    MouseHeld = false,
+    LastKillCount = 0,
+    RadarPos = nil,
+    RadarDragging = false,
+    RadarDragOffset = Vector2.zero
+}
+
+local OriginalLighting = {
+    Brightness = Lighting.Brightness,
+    Ambient = Lighting.Ambient
+}
+
+local DeathTracker = {}
+local WeaponPatterns = {
+    "upper_receiver", "lower_receiver", "receiver", "barrel", 
+    "magazine", "handguard", "stock", "slide", "pump", "grip",
+    "mp5", "m4", "glock", "awm", "vector", "asval", "ebr", "m500", "pp2000", "fix"
+}
+
+local Connections = {}
+local chamsObjects = {}
+local billboardGuis = {}
+local offscreenIndicators = {}
+local lookDirectionIndicators = {}
+local WatermarkGui = nil
+local PreviewGui = nil
+
+-- UI Container
+local UI = {}
+UI.ScreenGui = Instance.new("ScreenGui")
+UI.ScreenGui.Name = "FrontlinesEnhanced"
+UI.ScreenGui.ResetOnSpawn = false
+UI.ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+UI.ScreenGui.DisplayOrder = 999
+UI.ScreenGui.IgnoreGuiInset = true
+
+pcall(function() UI.ScreenGui.Parent = game:GetService("CoreGui") end)
+if not UI.ScreenGui.Parent then
+    UI.ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+-- Weapon Detection Functions
+local function IsWeaponModel(obj)
+    if not obj:IsA("Model") then return false, nil end
+    if obj.Name == "soldier_model" then return false, nil end
+    if obj.Name:find("friendly_marker") then return false, nil end
+    
+    local weaponPos = nil
+    local isWeapon = false
+    
+    local objNameLower = obj.Name:lower()
+    for _, pattern in ipairs(WeaponPatterns) do
+        if objNameLower:find(pattern, 1, true) then
+            isWeapon = true
+            break
+        end
+    end
+    
+    if not isWeapon then
+        for _, child in ipairs(obj:GetChildren()) do
+            local childNameLower = child.Name:lower()
+            for _, pattern in ipairs(WeaponPatterns) do
+                if childNameLower:find(pattern, 1, true) then
+                    isWeapon = true
+                    if child:IsA("BasePart") then
+                        weaponPos = child.Position
+                    end
+                    break
+                end
+            end
+            if isWeapon then break end
+        end
+    end
+    
+    if isWeapon and not weaponPos then
+        local part = obj:FindFirstChildWhichIsA("BasePart", true)
+        if part then weaponPos = part.Position end
+    end
+    
+    return isWeapon, weaponPos
+end
+
+local function GetWeaponsNearby(position, radius)
+    local weapons = {}
+    for _, obj in ipairs(Workspace:GetChildren()) do
+        local isWeapon, weaponPos = IsWeaponModel(obj)
+        if isWeapon and weaponPos and (weaponPos - position).Magnitude < radius then
+            weapons[obj] = true
+        end
+    end
+    return weapons
+end
+
+local function HasNewWeaponNearby(position, knownWeapons, radius)
+    for _, obj in ipairs(Workspace:GetChildren()) do
+        local isWeapon, weaponPos = IsWeaponModel(obj)
+        if isWeapon and weaponPos and (weaponPos - position).Magnitude < radius and not knownWeapons[obj] then
+            return true
+        end
+    end
+    return false
+end
+
+-- Death Detection
+local function IsModelDead(model)
+    local root = model:FindFirstChild("HumanoidRootPart")
+    if not root then return false end
+    
+    local pos = root.Position
+    local now = tick()
+    
+    if not DeathTracker[model] then
+        DeathTracker[model] = {
+            lastPos = pos, lastMoveTime = now, wasActive = false,
+            isDead = false, frozenTime = 0,
+            knownWeapons = GetWeaponsNearby(pos, 10), lastWeaponCheck = now
+        }
+        return false
+    end
+    
+    local data = DeathTracker[model]
+    local delta = (pos - data.lastPos)
+    local isMoving = Vector3.new(delta.X, 0, delta.Z).Magnitude > 0.08 or math.abs(delta.Y) > 0.15
+    
+    if isMoving then
+        data.lastMoveTime = now
+        data.wasActive = true
+        data.frozenTime = 0
+        data.knownWeapons = GetWeaponsNearby(pos, 10)
+        data.lastWeaponCheck = now
+        data.isDead = false
+    else
+        data.frozenTime = now - data.lastMoveTime
+    end
+    
+    if not data.isDead and data.wasActive and data.frozenTime > 0.1 and data.frozenTime < 3.0 then
+        if now - data.lastWeaponCheck > 0.05 then
+            data.lastWeaponCheck = now
+            if HasNewWeaponNearby(pos, data.knownWeapons, 6) then
+                data.isDead = true
+            end
+        end
+    end
+    
+    data.lastPos = pos
+    return data.isDead
+end
+
+local function CleanupDeathTracker()
+    for model, _ in pairs(DeathTracker) do
+        if not model or not model.Parent then
+            DeathTracker[model] = nil
+        end
+    end
+end
+
+-- Player Detection
+local function IsLocalPlayer(model)
+    local myChar = LocalPlayer.Character
+    if not myChar then return false end
+    if model == myChar then return true end
+    local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+    local modelRoot = model:FindFirstChild("HumanoidRootPart")
+    if myRoot and modelRoot and (myRoot.Position - modelRoot.Position).Magnitude < 1 then
+        return true
+    end
+    return false
+end
+
+local function IsEnemy(model)
+    if not model:IsA("Model") or model.Name ~= "soldier_model" then return false end
+    if IsLocalPlayer(model) then return false end
+    if model:FindFirstChild("friendly_marker") then return false end
+    return true
+end
+
+local function GetRainbow()
+    return Color3.fromHSV(State.RainbowHue, 1, 1)
+end
+
+-- Heatmap color calculation
+local function LerpColor(a, b, t)
+    return Color3.new(
+        a.R + (b.R - a.R) * t,
+        a.G + (b.G - a.G) * t,
+        a.B + (b.B - a.B) * t
+    )
+end
+
+local function GetHeatmapColor(dist)
+    local nearDist = 20
+    local farDist = 100
+    local t = math.clamp((dist - nearDist) / (farDist - nearDist), 0, 1)
+    return LerpColor(Palette.HeatNear, Palette.HeatFar, t)
+end
+
+local function GetDistance(model)
+    local myChar = LocalPlayer.Character
+    if not myChar then return 0 end
+    local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+    local modelRoot = model:FindFirstChild("HumanoidRootPart")
+    if not myRoot or not modelRoot then return 0 end
+    return (myRoot.Position - modelRoot.Position).Magnitude
+end
+
+-- Chams System
+local Chams = {}
+
+function Chams.Create(model)
+    if chamsObjects[model] then return end
+    local h = Instance.new("Highlight")
+    h.Name = "_Chams"
+    h.Adornee = model
+    h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    h.FillColor = GetRainbow()
+    h.OutlineColor = Color3.new(1, 1, 1)
+    h.FillTransparency = 0.6
+    h.OutlineTransparency = 0
+    h.Parent = model
+    chamsObjects[model] = h
+end
+
+function Chams.Update(model)
+    local h = chamsObjects[model]
+    if not h then return end
+    
+    local isDead = Config.ESP_DeadCheck and IsModelDead(model) or false
+    
+    if Config.ESP_Heatmap and not isDead then
+        local dist = GetDistance(model)
+        local col = GetHeatmapColor(dist)
+        h.FillColor = col
+        h.OutlineColor = col
+    else
+        h.FillColor = isDead and Palette.Dead or GetRainbow()
+        h.OutlineColor = isDead and Palette.Dead or Color3.new(1, 1, 1)
+    end
+    
+    h.Enabled = true
+end
+
+function Chams.Remove(model)
+    if chamsObjects[model] then
+        chamsObjects[model]:Destroy()
+        chamsObjects[model] = nil
+    end
+end
+
+function Chams.ClearAll()
+    for model, _ in pairs(chamsObjects) do Chams.Remove(model) end
+    chamsObjects = {}
+end
+
+function Chams.Step()
+    if State.Unloaded or not Config.ESP_Enabled then
+        Chams.ClearAll()
+        return
+    end
+    
+    local validModels = {}
+    for _, model in ipairs(Workspace:GetChildren()) do
+        if model:IsA("Model") and model.Name == "soldier_model" and IsEnemy(model) then
+            validModels[model] = true
+            if not chamsObjects[model] then Chams.Create(model) end
+            Chams.Update(model)
+        end
+    end
+    for model, _ in pairs(chamsObjects) do
+        if not validModels[model] then Chams.Remove(model) end
+    end
+end
+
+-- BillboardGui ESP System (Name Tags & Distance)
+local BillboardESP = {}
+
+function BillboardESP.Create(model)
+    if billboardGuis[model] then return end
+    
+    local root = model:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "_ESPBillboard"
+    billboard.Adornee = root
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 3, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = root
+    
+    -- Name Label
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Name = "NameLabel"
+    nameLabel.Size = UDim2.new(1, 0, 0, 20)
+    nameLabel.Position = UDim2.new(0, 0, 0, 0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = "ENEMY"
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextSize = 14
+    nameLabel.TextColor3 = Palette.Enemy
+    nameLabel.TextStrokeTransparency = 0.5
+    nameLabel.Parent = billboard
+    
+    -- Distance Label
+    local distLabel = Instance.new("TextLabel")
+    distLabel.Name = "DistLabel"
+    distLabel.Size = UDim2.new(1, 0, 0, 16)
+    distLabel.Position = UDim2.new(0, 0, 0, 20)
+    distLabel.BackgroundTransparency = 1
+    distLabel.Text = "0m"
+    distLabel.Font = Enum.Font.Gotham
+    distLabel.TextSize = 12
+    distLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    distLabel.TextStrokeTransparency = 0.5
+    distLabel.Parent = billboard
+    
+    billboardGuis[model] = billboard
+end
+
+function BillboardESP.Update(model)
+    local billboard = billboardGuis[model]
+    if not billboard or not billboard.Parent then return end
+    
+    local nameLabel = billboard:FindFirstChild("NameLabel")
+    local distLabel = billboard:FindFirstChild("DistLabel")
+    if not nameLabel or not distLabel then return end
+    
+    local isDead = Config.ESP_DeadCheck and IsModelDead(model) or false
+    local dist = GetDistance(model)
+    
+    -- Update text
+    nameLabel.Text = isDead and "DEAD" or "ENEMY"
+    distLabel.Text = math.floor(dist) .. "m"
+    
+    -- Update colors
+    if Config.ESP_Heatmap and not isDead then
+        local col = GetHeatmapColor(dist)
+        nameLabel.TextColor3 = col
+    else
+        nameLabel.TextColor3 = isDead and Palette.Dead or GetRainbow()
+    end
+    
+    -- Show/hide based on settings and distance
+    nameLabel.Visible = Config.ESP_NameTags and dist <= Config.ESP_MaxDist
+    distLabel.Visible = Config.ESP_Distance and dist <= Config.ESP_MaxDist
+end
+
+function BillboardESP.Remove(model)
+    if billboardGuis[model] then
+        billboardGuis[model]:Destroy()
+        billboardGuis[model] = nil
+    end
+end
+
+function BillboardESP.ClearAll()
+    for model, _ in pairs(billboardGuis) do
+        BillboardESP.Remove(model)
+    end
+    billboardGuis = {}
+end
+
+function BillboardESP.Step()
+    if State.Unloaded or not Config.ESP_Enabled or (not Config.ESP_NameTags and not Config.ESP_Distance) then
+        BillboardESP.ClearAll()
+        return
+    end
+    
+    local validModels = {}
+    for _, model in ipairs(Workspace:GetChildren()) do
+        if model:IsA("Model") and model.Name == "soldier_model" and IsEnemy(model) then
+            validModels[model] = true
+            if not billboardGuis[model] then BillboardESP.Create(model) end
+            BillboardESP.Update(model)
+        end
+    end
+    
+    for model, _ in pairs(billboardGuis) do
+        if not validModels[model] then BillboardESP.Remove(model) end
+    end
+end
+
+-- Look Direction Indicator System
+local LookDirection = {}
+
+function LookDirection.Create(model)
+    if lookDirectionIndicators[model] then return end
+    
+    local root = model:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    
+    -- Create a beam to show look direction
+    local attachment0 = Instance.new("Attachment")
+    attachment0.Name = "_LookAttach0"
+    attachment0.Parent = root
+    
+    local attachment1 = Instance.new("Attachment")
+    attachment1.Name = "_LookAttach1"
+    attachment1.Parent = root
+    
+    local beam = Instance.new("Beam")
+    beam.Name = "_LookBeam"
+    beam.Attachment0 = attachment0
+    beam.Attachment1 = attachment1
+    beam.Color = ColorSequence.new(Palette.LookDirection)
+    beam.Width0 = 0.3
+    beam.Width1 = 0.1
+    beam.FaceCamera = true
+    beam.Transparency = NumberSequence.new(0.3)
+    beam.Parent = root
+    
+    lookDirectionIndicators[model] = {beam = beam, attach0 = attachment0, attach1 = attachment1}
+end
+
+function LookDirection.Update(model)
+    local indicator = lookDirectionIndicators[model]
+    if not indicator then return end
+    
+    local torso = model:FindFirstChild("TPVBodyVanillaTorsoFront")
+    if not torso then
+        indicator.beam.Enabled = false
+        return
+    end
+    
+    local lookDir = torso.CFrame.LookVector
+    indicator.attach1.Position = lookDir * 5
+    indicator.beam.Color = ColorSequence.new(Palette.LookDirection)
+    indicator.beam.Enabled = true
+end
+
+function LookDirection.Remove(model)
+    local indicator = lookDirectionIndicators[model]
+    if indicator then
+        if indicator.beam then indicator.beam:Destroy() end
+        if indicator.attach0 then indicator.attach0:Destroy() end
+        if indicator.attach1 then indicator.attach1:Destroy() end
+        lookDirectionIndicators[model] = nil
+    end
+end
+
+function LookDirection.ClearAll()
+    for model, _ in pairs(lookDirectionIndicators) do
+        LookDirection.Remove(model)
+    end
+    lookDirectionIndicators = {}
+end
+
+function LookDirection.Step()
+    if State.Unloaded or not Config.ESP_Enabled or not Config.ESP_LookDirection then
+        LookDirection.ClearAll()
+        return
+    end
+    
+    local validModels = {}
+    for _, model in ipairs(Workspace:GetChildren()) do
+        if model:IsA("Model") and model.Name == "soldier_model" and IsEnemy(model) then
+            local isDead = Config.ESP_DeadCheck and IsModelDead(model) or false
+            if not isDead then
+                validModels[model] = true
+                if not lookDirectionIndicators[model] then LookDirection.Create(model) end
+                LookDirection.Update(model)
+            end
+        end
+    end
+    
+    for model, _ in pairs(lookDirectionIndicators) do
+        if not validModels[model] then LookDirection.Remove(model) end
+    end
+end
+
+-- Offscreen Indicator System
+local OffscreenIndicators = {}
+
+function OffscreenIndicators.Init()
+    if OffscreenIndicators.Container then return end
+    
+    OffscreenIndicators.Container = Instance.new("ScreenGui")
+    OffscreenIndicators.Container.Name = "OffscreenIndicators"
+    OffscreenIndicators.Container.ResetOnSpawn = false
+    OffscreenIndicators.Container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    OffscreenIndicators.Container.DisplayOrder = 1000
+    OffscreenIndicators.Container.IgnoreGuiInset = true
+    
+    pcall(function() OffscreenIndicators.Container.Parent = game:GetService("CoreGui") end)
+    if not OffscreenIndicators.Container.Parent then
+        OffscreenIndicators.Container.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    end
+    
+    OffscreenIndicators.Arrows = {}
+    for i = 1, 30 do
+        local arrow = Instance.new("ImageLabel")
+        arrow.Name = "Arrow" .. i
+        arrow.Size = UDim2.new(0, 20, 0, 20)
+        arrow.AnchorPoint = Vector2.new(0.5, 0.5)
+        arrow.BackgroundTransparency = 1
+        arrow.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+        arrow.ImageColor3 = Palette.Offscreen
+        arrow.Visible = false
+        arrow.Parent = OffscreenIndicators.Container
+        
+        -- Create triangle using Frame as fallback
+        local triangle = Instance.new("Frame")
+        triangle.Size = UDim2.new(1, 0, 1, 0)
+        triangle.BackgroundColor3 = Palette.Offscreen
+        triangle.BorderSizePixel = 0
+        triangle.Parent = arrow
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 3)
+        corner.Parent = triangle
+        
+        OffscreenIndicators.Arrows[i] = {frame = arrow, triangle = triangle}
+    end
+end
+
+function OffscreenIndicators.Update(cam)
+    if not Config.ESP_Offscreen or not OffscreenIndicators.Container then return end
+    
+    local screenSize = cam.ViewportSize
+    local screenCenter = Vector2.new(screenSize.X / 2, screenSize.Y / 2)
+    local arrowIdx = 1
+    
+    for _, model in ipairs(Workspace:GetChildren()) do
+        if IsEnemy(model) and arrowIdx <= #OffscreenIndicators.Arrows then
+            local root = model:FindFirstChild("HumanoidRootPart")
+            if root then
+                local isDead = Config.ESP_DeadCheck and IsModelDead(model) or false
+                if not isDead then
+                    local dist = GetDistance(model)
+                    if dist <= Config.ESP_MaxDist then
+                        local sp, onScreen = cam:WorldToViewportPoint(root.Position)
+                        
+                        if sp.Z <= 0 or sp.X < 0 or sp.X > screenSize.X or sp.Y < 0 or sp.Y > screenSize.Y then
+                            -- Enemy is offscreen, show indicator
+                            local angle = math.atan2(sp.Y - screenCenter.Y, sp.X - screenCenter.X)
+                            local edge = 50
+                            local posX = math.clamp(screenCenter.X + math.cos(angle) * (screenSize.X/2 - edge), edge, screenSize.X - edge)
+                            local posY = math.clamp(screenCenter.Y + math.sin(angle) * (screenSize.Y/2 - edge), edge, screenSize.Y - edge)
+                            
+                            local arrow = OffscreenIndicators.Arrows[arrowIdx]
+                            arrow.frame.Position = UDim2.new(0, posX, 0, posY)
+                            arrow.frame.Rotation = math.deg(angle) + 90
+                            
+                            -- Color based on heatmap or default
+                            local color = Config.ESP_Heatmap and GetHeatmapColor(dist) or Palette.Offscreen
+                            arrow.triangle.BackgroundColor3 = color
+                            
+                            arrow.frame.Visible = true
+                            arrowIdx = arrowIdx + 1
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    -- Hide unused arrows
+    for i = arrowIdx, #OffscreenIndicators.Arrows do
+        OffscreenIndicators.Arrows[i].frame.Visible = false
+    end
+end
+
+function OffscreenIndicators.ClearAll()
+    if OffscreenIndicators.Container then
+        OffscreenIndicators.Container:Destroy()
+        OffscreenIndicators.Container = nil
+        OffscreenIndicators.Arrows = {}
+    end
+end
+
+-- ESP Preview System
+local ESPPreview = {}
+
+function ESPPreview.Init()
+    if PreviewGui then return end
+    
+    PreviewGui = Instance.new("ScreenGui")
+    PreviewGui.Name = "ESPPreview"
+    PreviewGui.ResetOnSpawn = false
+    PreviewGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    PreviewGui.DisplayOrder = 997
+    PreviewGui.IgnoreGuiInset = true
+    
+    pcall(function() PreviewGui.Parent = game:GetService("CoreGui") end)
+    if not PreviewGui.Parent then
+        PreviewGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    end
+    
+    -- Preview container
+    local container = Instance.new("Frame")
+    container.Name = "PreviewContainer"
+    container.Size = UDim2.new(0, 180, 0, 260)
+    container.Position = UDim2.new(1, -200, 0, 20)
+    container.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+    container.BackgroundTransparency = 0.04
+    container.BorderSizePixel = 0
+    container.Parent = PreviewGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = container
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(220, 60, 60)
+    stroke.Thickness = 2
+    stroke.Parent = container
+    
+    -- Title
+    local title = Instance.new("TextLabel")
+    title.Name = "Title"
+    title.Size = UDim2.new(1, 0, 0, 25)
+    title.Position = UDim2.new(0, 0, 0, 5)
+    title.BackgroundTransparency = 1
+    title.Text = "ESP PREVIEW"
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 12
+    title.TextColor3 = Color3.fromRGB(150, 150, 160)
+    title.Parent = container
+    
+    -- Enemy figure (head)
+    local head = Instance.new("Frame")
+    head.Name = "Head"
+    head.Size = UDim2.new(0, 20, 0, 20)
+    head.Position = UDim2.new(0.5, -10, 0, 60)
+    head.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
+    head.BorderSizePixel = 0
+    head.Parent = container
+    
+    local headCorner = Instance.new("UICorner")
+    headCorner.CornerRadius = UDim.new(1, 0)
+    headCorner.Parent = head
+    
+    -- Torso
+    local torso = Instance.new("Frame")
+    torso.Name = "Torso"
+    torso.Size = UDim2.new(0, 30, 0, 50)
+    torso.Position = UDim2.new(0.5, -15, 0, 82)
+    torso.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+    torso.BorderSizePixel = 0
+    torso.Parent = container
+    
+    local torsoCorner = Instance.new("UICorner")
+    torsoCorner.CornerRadius = UDim.new(0, 4)
+    torsoCorner.Parent = torso
+    
+    -- Arms
+    local armL = Instance.new("Frame")
+    armL.Size = UDim2.new(0, 8, 0, 40)
+    armL.Position = UDim2.new(0.5, -25, 0, 85)
+    armL.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+    armL.BorderSizePixel = 0
+    armL.Parent = container
+    
+    local armR = Instance.new("Frame")
+    armR.Size = UDim2.new(0, 8, 0, 40)
+    armR.Position = UDim2.new(0.5, 17, 0, 85)
+    armR.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+    armR.BorderSizePixel = 0
+    armR.Parent = container
+    
+    -- Legs
+    local legL = Instance.new("Frame")
+    legL.Size = UDim2.new(0, 10, 0, 50)
+    legL.Position = UDim2.new(0.5, -15, 0, 134)
+    legL.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+    legL.BorderSizePixel = 0
+    legL.Parent = container
+    
+    local legR = Instance.new("Frame")
+    legR.Size = UDim2.new(0, 10, 0, 50)
+    legR.Position = UDim2.new(0.5, 5, 0, 134)
+    legR.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+    legR.BorderSizePixel = 0
+    legR.Parent = container
+    
+    -- ESP Box overlay
+    local espBox = Instance.new("Frame")
+    espBox.Name = "ESPBox"
+    espBox.Size = UDim2.new(0, 70, 0, 140)
+    espBox.Position = UDim2.new(0.5, -35, 0, 50)
+    espBox.BackgroundTransparency = 1
+    espBox.BorderSizePixel = 0
+    espBox.Parent = container
+    
+    local boxStroke = Instance.new("UIStroke")
+    boxStroke.Name = "BoxStroke"
+    boxStroke.Color = Palette.Enemy
+    boxStroke.Thickness = 2
+    boxStroke.Parent = espBox
+    
+    -- Name tag
+    local nameTag = Instance.new("TextLabel")
+    nameTag.Name = "NameTag"
+    nameTag.Size = UDim2.new(1, 0, 0, 20)
+    nameTag.Position = UDim2.new(0, 0, 0, -25)
+    nameTag.BackgroundTransparency = 1
+    nameTag.Text = "ENEMY"
+    nameTag.Font = Enum.Font.GothamBold
+    nameTag.TextSize = 13
+    nameTag.TextColor3 = Palette.Enemy
+    nameTag.TextStrokeTransparency = 0.5
+    nameTag.Parent = espBox
+    
+    -- Distance tag
+    local distTag = Instance.new("TextLabel")
+    distTag.Name = "DistTag"
+    distTag.Size = UDim2.new(1, 0, 0, 16)
+    distTag.Position = UDim2.new(0, 0, 1, 5)
+    distTag.BackgroundTransparency = 1
+    distTag.Text = "50m"
+    distTag.Font = Enum.Font.Gotham
+    distTag.TextSize = 11
+    distTag.TextColor3 = Color3.fromRGB(170, 170, 170)
+    distTag.TextStrokeTransparency = 0.5
+    distTag.Parent = espBox
+    
+    -- Look direction arrow
+    local lookArrow = Instance.new("ImageLabel")
+    lookArrow.Name = "LookArrow"
+    lookArrow.Size = UDim2.new(0, 40, 0, 40)
+    lookArrow.Position = UDim2.new(0.5, -20, 0.5, -20)
+    lookArrow.BackgroundTransparency = 1
+    lookArrow.Image = "rbxassetid://6031097225"
+    lookArrow.ImageColor3 = Palette.LookDirection
+    lookArrow.Rotation = 45
+    lookArrow.Parent = container
+    
+    ESPPreview.Container = container
+    ESPPreview.Box = espBox
+    ESPPreview.BoxStroke = boxStroke
+    ESPPreview.NameTag = nameTag
+    ESPPreview.DistTag = distTag
+    ESPPreview.LookArrow = lookArrow
+    ESPPreview.Head = head
+    ESPPreview.Torso = torso
+end
+
+function ESPPreview.Update()
+    if not PreviewGui or not ESPPreview.Container then return end
+    
+    ESPPreview.Container.Visible = Config.VIS_ESPPreview
+    
+    if not Config.VIS_ESPPreview then return end
+    
+    -- Animate distance for heatmap demo
+    local animCycle = tick() % 3
+    local animDist
+    if animCycle < 1.5 then
+        animDist = 20 + (animCycle / 1.5) * 80
+    else
+        animDist = 100 - ((animCycle - 1.5) / 1.5) * 80
+    end
+    animDist = math.floor(animDist)
+    
+    ESPPreview.DistTag.Text = animDist .. "m"
+    
+    -- Update colors based on settings
+    local color = Config.ESP_Heatmap and GetHeatmapColor(animDist) or GetRainbow()
+    
+    ESPPreview.BoxStroke.Color = color
+    ESPPreview.NameTag.TextColor3 = color
+    
+    -- Update visibility based on settings
+    ESPPreview.NameTag.Visible = Config.ESP_NameTags
+    ESPPreview.DistTag.Visible = Config.ESP_Distance
+    ESPPreview.LookArrow.Visible = Config.ESP_LookDirection
+    
+    -- Rotate look arrow
+    ESPPreview.LookArrow.Rotation = (tick() * 30) % 360
+    
+    -- Update chams preview on figure
+    if Config.ESP_Enabled then
+        local headStroke = ESPPreview.Head:FindFirstChild("UIStroke")
+        if not headStroke then
+            headStroke = Instance.new("UIStroke")
+            headStroke.Thickness = 3
+            headStroke.Parent = ESPPreview.Head
+        end
+        headStroke.Color = color
+        headStroke.Transparency = 0
+        
+        local torsoStroke = ESPPreview.Torso:FindFirstChild("UIStroke")
+        if not torsoStroke then
+            torsoStroke = Instance.new("UIStroke")
+            torsoStroke.Thickness = 3
+            torsoStroke.Parent = ESPPreview.Torso
+        end
+        torsoStroke.Color = color
+        torsoStroke.Transparency = 0
+    end
+end
+
+-- FOV Circle
+local FOVCircle = Instance.new("Frame")
+FOVCircle.BackgroundTransparency = 1
+FOVCircle.BorderSizePixel = 0
+FOVCircle.AnchorPoint = Vector2.new(0.5, 0.5)
+FOVCircle.Parent = UI.ScreenGui
+local FOVStroke = Instance.new("UIStroke")
+FOVStroke.Color = Palette.FOV_Circle
+FOVStroke.Thickness = 1
+FOVStroke.Parent = FOVCircle
+Instance.new("UICorner", FOVCircle).CornerRadius = UDim.new(1, 0)
+
+-- Radar System
+local Radar = {
+    Gui = nil,
+    Frame = nil,
+    Lines = {},
+    Dots = {},
+    Center = nil
+}
+
+function Radar.Init()
+    if Radar.Gui then return end
+    
+    Radar.Gui = Instance.new("ScreenGui")
+    Radar.Gui.Name = "RadarGui"
+    Radar.Gui.ResetOnSpawn = false
+    Radar.Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    Radar.Gui.DisplayOrder = 998
+    pcall(function() Radar.Gui.Parent = game:GetService("CoreGui") end)
+    if not Radar.Gui.Parent then
+        Radar.Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    end
+    
+    -- Main radar frame
+    Radar.Frame = Instance.new("Frame")
+    Radar.Frame.Name = "RadarFrame"
+    Radar.Frame.Size = UDim2.new(0, Config.RADAR_Size, 0, Config.RADAR_Size)
+    Radar.Frame.BackgroundColor3 = Palette.RadarBg
+    Radar.Frame.BackgroundTransparency = 0.08
+    Radar.Frame.BorderSizePixel = 0
+    Radar.Frame.Parent = Radar.Gui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = Radar.Frame
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Palette.RadarBorder
+    stroke.Thickness = 2
+    stroke.Parent = Radar.Frame
+    
+    -- Cross lines
+    for i = 1, 2 do
+        local line = Instance.new("Frame")
+        line.BackgroundColor3 = Palette.RadarGrid
+        line.BorderSizePixel = 0
+        line.Parent = Radar.Frame
+        Radar.Lines[i] = line
+    end
+    
+    -- Center indicator
+    Radar.Center = Instance.new("Frame")
+    Radar.Center.Size = UDim2.new(0, 6, 0, 6)
+    Radar.Center.AnchorPoint = Vector2.new(0.5, 0.5)
+    Radar.Center.BackgroundColor3 = Palette.RadarYou
+    Radar.Center.BorderSizePixel = 0
+    Radar.Center.Parent = Radar.Frame
+    
+    local centerCorner = Instance.new("UICorner")
+    centerCorner.CornerRadius = UDim.new(1, 0)
+    centerCorner.Parent = Radar.Center
+    
+    -- Enemy dots
+    for i = 1, 50 do
+        local dot = Instance.new("Frame")
+        dot.Size = UDim2.new(0, 5, 0, 5)
+        dot.AnchorPoint = Vector2.new(0.5, 0.5)
+        dot.BackgroundColor3 = Palette.Enemy
+        dot.BorderSizePixel = 0
+        dot.Visible = false
+        dot.Parent = Radar.Frame
+        
+        local dotCorner = Instance.new("UICorner")
+        dotCorner.CornerRadius = UDim.new(1, 0)
+        dotCorner.Parent = dot
+        
+        Radar.Dots[i] = dot
+    end
+end
+
+function Radar.Update(cam)
+    if not Config.RADAR_Enabled then
+        if Radar.Frame then Radar.Frame.Visible = false end
+        return
+    end
+    
+    if not Radar.Gui then Radar.Init() end
+    
+    Radar.Frame.Size = UDim2.new(0, Config.RADAR_Size, 0, Config.RADAR_Size)
+    
+    if not State.RadarPos then
+        State.RadarPos = UDim2.new(1, -Config.RADAR_Size - 15, 0, 15)
+    end
+    Radar.Frame.Position = State.RadarPos
+    Radar.Frame.Visible = true
+    
+    -- Update cross lines
+    local size = Config.RADAR_Size
+    Radar.Lines[1].Size = UDim2.new(0, 1, 1, -16)
+    Radar.Lines[1].Position = UDim2.new(0.5, 0, 0, 8)
+    Radar.Lines[2].Size = UDim2.new(1, -16, 0, 1)
+    Radar.Lines[2].Position = UDim2.new(0, 8, 0.5, 0)
+    
+    -- Update center
+    Radar.Center.Position = UDim2.new(0.5, 0, 0.5, 0)
+    
+    local myChar = LocalPlayer.Character
+    local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+    local myLook = cam.CFrame.LookVector
+    
+    if not myRoot then
+        Radar.Center.Visible = false
+        for _, d in ipairs(Radar.Dots) do d.Visible = false end
+        return
+    end
+    
+    local myAngle = math.atan2(-myLook.X, -myLook.Z)
+    local cosA, sinA = math.cos(myAngle), math.sin(myAngle)
+    local scale = (size/2 - 8) / Config.RADAR_Range
+    local dotIdx = 1
+    
+    for _, model in ipairs(Workspace:GetChildren()) do
+        if IsEnemy(model) then
+            local root = model:FindFirstChild("HumanoidRootPart")
+            if root then
+                local rx = root.Position.X - myRoot.Position.X
+                local rz = root.Position.Z - myRoot.Position.Z
+                local dist2D = math.sqrt(rx^2 + rz^2)
+                
+                if dist2D < Config.RADAR_Range and dotIdx <= #Radar.Dots then
+                    local rotX = rx * cosA - rz * sinA
+                    local rotZ = rx * sinA + rz * cosA
+                    local radarX, radarY = rotX * scale, rotZ * scale
+                    
+                    -- Clamp to radar bounds
+                    local maxD = size/2 - 6
+                    local rDist = math.sqrt(radarX^2 + radarY^2)
+                    if rDist > maxD then
+                        radarX, radarY = radarX/rDist * maxD, radarY/rDist * maxD
+                    end
+                    
+                    local dot = Radar.Dots[dotIdx]
+                    dot.Position = UDim2.new(0.5, radarX, 0.5, radarY)
+                    
+                    local isDead = Config.ESP_DeadCheck and IsModelDead(model) or false
+                    dot.BackgroundColor3 = isDead and Palette.Dead or (Config.ESP_Heatmap and GetHeatmapColor(dist2D) or Palette.Enemy)
+                    dot.Visible = true
+                    dotIdx = dotIdx + 1
+                end
+            end
+        end
+    end
+    
+    -- Hide unused dots
+    for i = dotIdx, #Radar.Dots do
+        Radar.Dots[i].Visible = false
+    end
+    
+    Radar.Center.Visible = true
+end
+
+-- Aimbot System
+local Aimbot = { currentTarget = nil, lastTargetTime = 0 }
+
+function Aimbot.GetTarget(cam)
+    local best, bestScore, bestModel = nil, math.huge, nil
+    local mousePos = Vector2.new(Mouse.X, Mouse.Y)
+    local myChar = LocalPlayer.Character
+    local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+    
+    for _, model in ipairs(Workspace:GetChildren()) do
+        if not model:IsA("Model") or model.Name ~= "soldier_model" then continue end
+        if not IsEnemy(model) then continue end
+        if IsModelDead(model) then continue end
+        
+        local parts = {}
+        if Config.AIM_TargetPart == "Auto" or Config.AIM_TargetPart == "Head" then
+            table.insert(parts, model:FindFirstChild("TPVBodyVanillaHead"))
+        end
+        if Config.AIM_TargetPart == "Auto" or Config.AIM_TargetPart == "Torso" then
+            table.insert(parts, model:FindFirstChild("HumanoidRootPart"))
+        end
+        
+        for _, part in ipairs(parts) do
+            if part then
+                local sp, onScreen = cam:WorldToViewportPoint(part.Position)
+                if onScreen and sp.Z > 0 then
+                    local screenDist = (Vector2.new(sp.X, sp.Y) - mousePos).Magnitude
+                    if screenDist <= Config.AIM_FOV then
+                        local score = screenDist / Config.AIM_FOV
+                        if model == Aimbot.currentTarget then score = score * 0.7 end
+                        if score < bestScore then
+                            bestScore = score
+                            best = part.Position
+                            bestModel = model
+                        end
+                    end
+                end
+                break
+            end
+        end
+    end
+    
+    if bestModel then
+        Aimbot.currentTarget = bestModel
+        Aimbot.lastTargetTime = tick()
+    elseif tick() - Aimbot.lastTargetTime > 0.5 then
+        Aimbot.currentTarget = nil
+    end
+    return best
+end
+
+function Aimbot.Step(cam, screenCenter)
+    local guiInset = GuiService:GetGuiInset()
+    local isAiming = State.Aiming
+    pcall(function() isAiming = isAiming or UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) end)
+    
+    if Config.AIM_Enabled and Config.AIM_ShowFOV then
+        FOVCircle.Position = UDim2.new(0, screenCenter.X, 0, screenCenter.Y + guiInset.Y)
+        FOVCircle.Size = UDim2.new(0, Config.AIM_FOV * 2, 0, Config.AIM_FOV * 2)
+        FOVStroke.Color = isAiming and Palette.FOV_Active or Palette.FOV_Circle
+        FOVCircle.Visible = true
+    else
+        FOVCircle.Visible = false
+    end
+    
+    if not Config.AIM_Enabled or not isAiming then return end
+    
+    local target = Aimbot.GetTarget(cam)
+    if not target then return end
+    
+    local mousePos = Vector2.new(Mouse.X, Mouse.Y)
+    local sp = cam:WorldToViewportPoint(target)
+    local delta = Vector2.new(sp.X - mousePos.X, sp.Y - mousePos.Y)
+    if delta.Magnitude < 2 then return end
+    
+    if mousemoverel then
+        pcall(function() mousemoverel(delta.X * Config.AIM_Smooth, delta.Y * Config.AIM_Smooth) end)
+    end
+end
+
+-- Noclip System
+local Noclip = { Initialized = false, Connection = nil }
+
+function Noclip.DisableCollision(m)
+    for _, p in pairs(m:GetDescendants()) do
+        if p:IsA("BasePart") then p.CanCollide = false end
+    end
+end
+
+function Noclip.Init()
+    if Noclip.Initialized then return end
+    Noclip.Initialized = true
+    for _, obj in pairs(Workspace:GetDescendants()) do
+        if obj.Name:find("soldier") then Noclip.DisableCollision(obj) end
+    end
+    Noclip.Connection = Workspace.DescendantAdded:Connect(function(obj)
+        if not Config.MOVE_Noclip then return end
+        task.wait(0.3)
+        if obj.Name:find("soldier") then
+            repeat task.wait() until obj:FindFirstChild("HumanoidRootPart")
+            Noclip.DisableCollision(obj)
+        end
+    end)
+end
+
+function Noclip.Step()
+    if Config.MOVE_Noclip and not Noclip.Initialized then Noclip.Init() end
+end
+
+-- Speed Hack System
+local SpeedHack = {}
+
+function SpeedHack.Apply()
+    if not Config.MOVE_SpeedEnabled then return end
+    
+    local myChar = LocalPlayer.Character
+    if not myChar then return end
+    local humanoid = myChar:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = Config.MOVE_Speed
+    end
+end
+
+-- AutoClicker System
+local AutoClicker = {}
+AutoClicker.Thread = nil
+
+function AutoClicker.Start()
+    if AutoClicker.Thread then return end
+    if not Config.COMBAT_AutoClick then return end
+    
+    print("[Semi to Auto] ✓ Activated - Fire Rate: " .. Config.COMBAT_AutoClickDelay .. "ms")
+    
+    AutoClicker.Thread = task.spawn(function()
+        while Config.COMBAT_AutoClick and State.MouseHeld and not State.Unloaded do
+            pcall(function()
+                mouse1click()
+            end)
+            
+            task.wait(Config.COMBAT_AutoClickDelay / 1000)
+        end
+        
+        AutoClicker.Thread = nil
+        print("[Semi to Auto] ✗ Deactivated")
+    end)
+end
+
+function AutoClicker.Stop()
+    if AutoClicker.Thread then
+        task.cancel(AutoClicker.Thread)
+        AutoClicker.Thread = nil
+    end
+end
+
+-- KillSay System
+local KillSay = {}
+local TrackedKills = {}
+
+function KillSay.SendToChat(message)
+    pcall(function()
+        local VIM = game:GetService("VirtualInputManager")
+        VIM:SendKeyEvent(true, Enum.KeyCode.Slash, false, game)
+        task.wait(0.05)
+        VIM:SendKeyEvent(false, Enum.KeyCode.Slash, false, game)
+        task.wait(0.1)
+        
+        for i = 1, #message do
+            local char = message:sub(i, i)
+            VIM:SendTextInputCharacterEvent(char)
+            task.wait(0.02)
+        end
+        
+        task.wait(0.1)
+        
+        VIM:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+        task.wait(0.05)
+        VIM:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        
+        print("[KillSay] Sent: " .. message)
+    end)
+end
+
+function KillSay.CheckForKills()
+    if not Config.COMBAT_KillSay then return end
+    
+    for _, model in ipairs(Workspace:GetChildren()) do
+        if model:IsA("Model") and model.Name == "soldier_model" and IsEnemy(model) then
+            if IsModelDead(model) and not TrackedKills[model] then
+                TrackedKills[model] = true
+                
+                local killMessage = Config.COMBAT_KillSayMessage
+                
+                task.spawn(function()
+                    task.wait(0.5)
+                    KillSay.SendToChat(killMessage)
+                end)
+                
+                task.spawn(function()
+                    task.wait(5)
+                    TrackedKills[model] = nil
+                end)
+            end
+        end
+    end
+end
+
+-- Gun Mods System
+local GunMods = {
+    Connection = nil,
+    OriginalValues = {}
+}
+
+function GunMods.ApplyFrame()
+    if not (Config.GUN_NoRecoil or Config.GUN_ReduceRecoil > 0 or Config.GUN_NoSway or Config.GUN_NoSpread) then return end
+    
+    pcall(function()
+        for _, v in pairs(getgc(true)) do
+            if type(v) == "table" then
+                if rawget(v, "recoil") then 
+                    if not GunMods.OriginalValues[v] then
+                        GunMods.OriginalValues[v] = {recoil = v.recoil}
+                    end
+                    
+                    if Config.GUN_NoRecoil then
+                        v.recoil = 0
+                    elseif Config.GUN_ReduceRecoil > 0 then
+                        local original = GunMods.OriginalValues[v].recoil
+                        local reduction = Config.GUN_ReduceRecoil / 100
+                        v.recoil = original * (1 - reduction)
+                    end
+                end
+                
+                if Config.GUN_NoSway and rawget(v, "sway") then 
+                    if not GunMods.OriginalValues[v] then
+                        GunMods.OriginalValues[v] = {sway = v.sway}
+                    end
+                    v.sway = 0 
+                end
+                
+                if Config.GUN_NoSpread and rawget(v, "spread") then 
+                    if not GunMods.OriginalValues[v] then
+                        GunMods.OriginalValues[v] = {spread = v.spread}
+                    end
+                    v.spread = 0 
+                end
+            end
+        end
+    end)
+end
+
+function GunMods.Toggle()
+    local anyEnabled = Config.GUN_NoRecoil or Config.GUN_ReduceRecoil > 0 or Config.GUN_NoSway or Config.GUN_NoSpread
+    
+    if anyEnabled then
+        if not GunMods.Connection then
+            GunMods.Connection = RunService.RenderStepped:Connect(GunMods.ApplyFrame)
+            print("[Gun Mods] ✓ Activated")
+        end
+    else
+        if GunMods.Connection then
+            GunMods.Connection:Disconnect()
+            GunMods.Connection = nil
+            GunMods.OriginalValues = {}
+            print("[Gun Mods] ✗ Deactivated")
+        end
+    end
+end
+
+-- Misc Functions
+local function ApplyMisc()
+    if Config.VIS_FullBright then
+        Lighting.Brightness = 2
+        Lighting.Ambient = Color3.new(1, 1, 1)
+    else
+        Lighting.Brightness = OriginalLighting.Brightness
+        Lighting.Ambient = OriginalLighting.Ambient
+    end
+    
+    SpeedHack.Apply()
+end
+
+-- Unload Function
+local function Unload()
+    if State.Unloaded then return end
+    State.Unloaded = true
+    
+    for _, conn in pairs(Connections) do
+        pcall(function() conn:Disconnect() end)
+    end
+    
+    Chams.ClearAll()
+    BillboardESP.ClearAll()
+    LookDirection.ClearAll()
+    OffscreenIndicators.ClearAll()
+    
+    if Noclip.Connection then pcall(function() Noclip.Connection:Disconnect() end) end
+    if GunMods.Connection then pcall(function() GunMods.Connection:Disconnect() end) end
+    
+    pcall(function() UI.ScreenGui:Destroy() end)
+    pcall(function() WatermarkGui:Destroy() end)
+    pcall(function() PreviewGui:Destroy() end)
+    if Radar.Gui then pcall(function() Radar.Gui:Destroy() end) end
+    
+    pcall(function()
+        Lighting.Brightness = OriginalLighting.Brightness
+        Lighting.Ambient = OriginalLighting.Ambient
+    end)
+    
+    print("Script unloaded successfully")
+end
+
+-- UI Toggle Function
+local function ToggleUI()
+    State.UIVisible = not State.UIVisible
+    if UI.MainWindow and UI.MainWindow.Visible ~= nil then
+        UI.MainWindow.Visible = State.UIVisible
+    end
+    for _, obj in pairs(UI.ScreenGui:GetChildren()) do
+        if obj:IsA("Frame") or obj:IsA("CanvasGroup") then
+            obj.Visible = State.UIVisible
+        end
+    end
+end
+
+-- Input Handling
+Connections.inputDown = UserInputService.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    
+    if input.KeyCode == Enum.KeyCode.Home then 
+        Unload() 
+        return 
+    end
+    
+    if input.KeyCode == Enum.KeyCode.H then
+        ToggleUI()
+        return
+    end
+    
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then 
+        State.Aiming = true 
+    end
+    
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        State.MouseHeld = true
+        if Config.COMBAT_AutoClick then
+            AutoClicker.Start()
+        end
+    end
+end)
+
+Connections.inputUp = UserInputService.InputEnded:Connect(function(input, gp)
+    if gp then return end
+    
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then 
+        State.Aiming = false 
+    end
+    
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        State.MouseHeld = false
+        AutoClicker.Stop()
+    end
+end)
+
+-- Main Loop
+Connections.render = RunService.RenderStepped:Connect(function()
+    if State.Unloaded then return end
+    
+    State.RainbowHue = (State.RainbowHue + 0.002) % 1
+    
+    local cam = Workspace.CurrentCamera
+    if not cam then return end
+    local screenSize = cam.ViewportSize
+    local screenCenter = Vector2.new(screenSize.X / 2, screenSize.Y / 2)
+    
+    pcall(ApplyMisc)
+    pcall(Noclip.Step)
+    pcall(Chams.Step)
+    pcall(BillboardESP.Step)
+    pcall(LookDirection.Step)
+    pcall(function() OffscreenIndicators.Update(cam) end)
+    pcall(function() Aimbot.Step(cam, screenCenter) end)
+    pcall(function() Radar.Update(cam) end)
+    pcall(ESPPreview.Update)
+    pcall(CleanupDeathTracker)
+    pcall(KillSay.CheckForKills)
+end)
+
+-- Load PlayStation UI Library
+print("Loading PlayStation UI Library...")
+
+local raw_url = 'https://raw.githubusercontent.com/GhostDuckyy/UI-Libraries/main/Playstation%20Ui%20Library/source.lua'
+local success, librarySource = pcall(function()
+    return game:HttpGet(raw_url)
+end)
+
+if not success or not librarySource or librarySource == "" then
+    warn("Failed to fetch library from GitHub. The link might be down or incorrect.")
+    warn("Script core functions will still work, but UI won't be available")
+    return
+end
+
+local Link = loadstring(librarySource)()
+
+-- Initialize Window
+local Win = Link:CreateWindow('FRONTLINES ENHANCED', 'discord.gg/2rxBDqmd7N')
+UI.MainWindow = Win
+
+-- Initialize systems
+OffscreenIndicators.Init()
+ESPPreview.Init()
+
+-- Create Bouncing Watermark
+WatermarkGui = Instance.new("ScreenGui")
+WatermarkGui.Name = "KyroWatermark"
+WatermarkGui.ResetOnSpawn = false
+WatermarkGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+WatermarkGui.DisplayOrder = 10000
+WatermarkGui.IgnoreGuiInset = true
+
+pcall(function() WatermarkGui.Parent = game:GetService("CoreGui") end)
+if not WatermarkGui.Parent then
+    WatermarkGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+local Watermark = Instance.new("TextLabel")
+Watermark.Name = "Watermark"
+Watermark.Size = UDim2.new(0, 200, 0, 80)
+Watermark.Position = UDim2.new(0, 100, 0, 100)
+Watermark.BackgroundTransparency = 1
+Watermark.Text = "KYRO"
+Watermark.Font = Enum.Font.GothamBold
+Watermark.TextSize = 48
+Watermark.TextColor3 = Color3.fromRGB(138, 43, 226)
+Watermark.TextTransparency = 0.75
+Watermark.TextStrokeTransparency = 0.85
+Watermark.TextStrokeColor3 = Color3.fromRGB(168, 85, 247)
+Watermark.Parent = WatermarkGui
+
+-- Bouncing DVD effect
+local velocityX = 1
+local velocityY = 0.7
+local speed = 50
+
+spawn(function()
+    while Watermark and Watermark.Parent do
+        local dt = task.wait()
+        local cam = Workspace.CurrentCamera
+        if not cam then continue end
+        
+        local screenSize = cam.ViewportSize
+        local currentPos = Watermark.Position
+        
+        local newX = currentPos.X.Offset + (velocityX * speed * dt)
+        local newY = currentPos.Y.Offset + (velocityY * speed * dt)
+        
+        if newX <= 0 or newX + Watermark.Size.X.Offset >= screenSize.X then
+            velocityX = -velocityX
+            newX = math.clamp(newX, 0, screenSize.X - Watermark.Size.X.Offset)
+            Watermark.TextColor3 = Color3.fromHSV(math.random(), 0.8, 0.9)
+        end
+        
+        if newY <= 0 or newY + Watermark.Size.Y.Offset >= screenSize.Y then
+            velocityY = -velocityY
+            newY = math.clamp(newY, 0, screenSize.Y - Watermark.Size.Y.Offset)
+            Watermark.TextColor3 = Color3.fromHSV(math.random(), 0.8, 0.9)
+        end
+        
+        Watermark.Position = UDim2.new(0, newX, 0, newY)
+    end
+end)
+
+-- ==================== UI TABS ====================
+
+-- TAB 1: ESP & Visuals
+local ESPTab = Win:addPage('ESP', 2, true, 6)
+
+ESPTab:addLabel('Core ESP', 'Main ESP settings')
+ESPTab:addToggle('Enable ESP', function(value)
+    Config.ESP_Enabled = value
+    print('ESP Enabled:', value)
+end)
+
+ESPTab:addToggle('Rainbow Chams', function(value)
+    Config.ESP_Enabled = value
+    print('Chams Enabled:', value)
+end)
+
+ESPTab:addToggle('Heatmap Mode', function(value)
+    Config.ESP_Heatmap = value
+    print('Heatmap Mode:', value)
+end)
+
+ESPTab:addToggle('Dead Check', function(value)
+    Config.ESP_DeadCheck = value
+    print('Dead Check:', value)
+end)
+
+ESPTab:addLabel('ESP Elements', 'Individual ESP components')
+
+ESPTab:addToggle('Name Tags', function(value)
+    Config.ESP_NameTags = value
+    print('Name Tags:', value)
+end)
+
+ESPTab:addToggle('Distance', function(value)
+    Config.ESP_Distance = value
+    print('Distance:', value)
+end)
+
+ESPTab:addToggle('Look Direction', function(value)
+    Config.ESP_LookDirection = value
+    print('Look Direction:', value)
+end)
+
+ESPTab:addToggle('Offscreen Arrows', function(value)
+    Config.ESP_Offscreen = value
+    print('Offscreen Indicators:', value)
+end)
+
+ESPTab:addSlider('Max Distance', 500, 3000, function(value)
+    Config.ESP_MaxDist = tonumber(value) or 1500
+    print('Max Distance:', Config.ESP_MaxDist)
+end)
+
+-- TAB 2: Radar
+local RadarTab = Win:addPage('Radar', 2, true, 6)
+
+RadarTab:addLabel('Radar Settings', 'Minimap configuration')
+
+RadarTab:addToggle('Enable Radar', function(value)
+    Config.RADAR_Enabled = value
+    print('Radar Enabled:', value)
+end)
+
+RadarTab:addSlider('Radar Size', 80, 200, function(value)
+    Config.RADAR_Size = tonumber(value) or 130
+    print('Radar Size:', Config.RADAR_Size)
+end)
+
+RadarTab:addSlider('Radar Range', 100, 400, function(value)
+    Config.RADAR_Range = tonumber(value) or 200
+    print('Radar Range:', Config.RADAR_Range)
+end)
+
+-- TAB 3: Aimbot
+local AimbotTab = Win:addPage('Aimbot', 2, true, 6)
+
+AimbotTab:addLabel('Aimbot Settings', 'Hold right-click to aim')
+
+AimbotTab:addToggle('Enable Aimbot', function(value)
+    Config.AIM_Enabled = value
+    print('Aimbot Enabled:', value)
+end)
+
+AimbotTab:addSlider('FOV Size', 50, 500, function(value)
+    Config.AIM_FOV = tonumber(value) or 250
+    print('FOV Size:', Config.AIM_FOV)
+end)
+
+AimbotTab:addSlider('Smoothness', 5, 50, function(value)
+    Config.AIM_Smooth = (tonumber(value) or 12) / 100
+    print('Smoothness:', Config.AIM_Smooth)
+end)
+
+AimbotTab:addToggle('Show FOV Circle', function(value)
+    Config.AIM_ShowFOV = value
+    print('Show FOV Circle:', value)
+end)
+
+-- TAB 4: Gun Mods
+local GunTab = Win:addPage('Gun', 2, true, 6)
+
+GunTab:addLabel('Recoil Control', 'Weapon recoil settings')
+
+GunTab:addToggle('No Recoil', function(value)
+    Config.GUN_NoRecoil = value
+    if value then
+        Config.GUN_ReduceRecoil = 0
+    end
+    GunMods.Toggle()
+    print('No Recoil:', value)
+end)
+
+GunTab:addSlider('Reduce Recoil %', 0, 100, function(value)
+    Config.GUN_ReduceRecoil = tonumber(value) or 0
+    if Config.GUN_ReduceRecoil > 0 then
+        Config.GUN_NoRecoil = false
+    end
+    GunMods.Toggle()
+    print('Reduce Recoil:', Config.GUN_ReduceRecoil .. '%')
+end)
+
+GunTab:addLabel('Weapon Stability', 'Additional gun mods')
+
+GunTab:addToggle('No Sway', function(value)
+    Config.GUN_NoSway = value
+    GunMods.Toggle()
+    print('No Sway:', value)
+end)
+
+GunTab:addToggle('No Spread', function(value)
+    Config.GUN_NoSpread = value
+    GunMods.Toggle()
+    print('No Spread:', value)
+end)
+
+-- TAB 5: Movement
+local MoveTab = Win:addPage('Movement', 2, true, 6)
+
+MoveTab:addLabel('Movement Mods', 'Player movement')
+
+MoveTab:addToggle('Ghost Mode', function(value)
+    Config.MOVE_Noclip = value
+    print('Ghost Mode:', value)
+end)
+
+MoveTab:addToggle('Speed Hack', function(value)
+    Config.MOVE_SpeedEnabled = value
+    print('Speed Hack:', value)
+end)
+
+MoveTab:addSlider('Walk Speed', 16, 100, function(value)
+    Config.MOVE_Speed = tonumber(value) or 16
+    print('Walk Speed:', Config.MOVE_Speed)
+end)
+
+-- TAB 6: Combat
+local CombatTab = Win:addPage('Combat', 2, true, 6)
+
+CombatTab:addLabel('Auto Features', 'Combat automation')
+
+CombatTab:addToggle('Semi to Auto', function(value)
+    Config.COMBAT_AutoClick = value
+    print('Semi to Auto:', value)
+end)
+
+CombatTab:addSlider('Fire Rate (ms)', 10, 200, function(value)
+    Config.COMBAT_AutoClickDelay = tonumber(value) or 50
+    print('Fire Rate:', Config.COMBAT_AutoClickDelay, 'ms')
+end)
+
+CombatTab:addLabel('Kill Effects', 'Post-kill features')
+
+CombatTab:addToggle('Kill Say', function(value)
+    Config.COMBAT_KillSay = value
+    print('Kill Say:', value)
+end)
+
+CombatTab:addLabel('Message', 'Type: setmsg("text") in console')
+
+-- TAB 7: Visual & Settings
+local SettingsTab = Win:addPage('Settings', 2, true, 6)
+
+SettingsTab:addLabel('Visual Settings', 'Display options')
+
+SettingsTab:addToggle('Full Bright', function(value)
+    Config.VIS_FullBright = value
+    print('Full Bright:', value)
+end)
+
+SettingsTab:addToggle('ESP Preview', function(value)
+    Config.VIS_ESPPreview = value
+    print('ESP Preview:', value)
+end)
+
+SettingsTab:addLabel('Controls', 'Keybinds')
+SettingsTab:addLabel('H', 'Toggle UI visibility')
+SettingsTab:addLabel('HOME', 'Unload script completely')
+
+SettingsTab:addLabel('Credits', 'Made by leet')
+SettingsTab:addLabel('Discord', 'discord.gg/2rxBDqmd7N')
+
+print("=================================")
+print("Frontlines Enhanced Script Loaded!")
+print("Discord: discord.gg/2rxBDqmd7N")
+print("Press H to toggle UI")
+print("Press HOME to unload")
+print("=================================")
+
+end -- End of LoadMainScript function
+
+-- Global function to change killsay message
+_G.setmsg = function(msg)
+    Config.COMBAT_KillSayMessage = tostring(msg)
+    print("[KillSay] Message set to: " .. Config.COMBAT_KillSayMessage)
+end
+
+-- ASCII Art Spam Loop (every 0.1 seconds as requested)
+task.spawn(function()
+    while not State.Unloaded do
+        print([[
+    ▄█   ▄█▄ ▄██   ▄      ▄████████  ▄██████▄  
+    ███ ▄███▀ ███   ██▄   ███    ███ ███    ███ 
+    ███▐██▀   ███▄▄▄███   ███    ███ ███    ███ 
+   ▄█████▀    ▀▀▀▀▀▀███   ███    ███ ███    ███ 
+  ▀▀█████▄    ▄██   ███ ▀███████████ ███    ███ 
+    ███▐██▄   ███   ███   ███    ███ ███    ███ 
+    ███ ▀███▄ ███   ███   ███    ███ ███    ███ 
+    ███   ▀█▀  ▀█████▀    ███    █▀   ▀██████▀  
+    ▀                                            
+
+    ╔══════════════════════════════════════════╗
+    ║      FRONTLINES ENHANCED v3.0            ║
+    ║        discord.gg/2rxBDqmd7N             ║
+    ╚══════════════════════════════════════════╝
+]])
+        task.wait(0.1) -- Print every 0.1 seconds
+    end
+end)
+
+-- Initial console output
+print([[
+    ▄█   ▄█▄ ▄██   ▄      ▄████████  ▄██████▄  
+    ███ ▄███▀ ███   ██▄   ███    ███ ███    ███ 
+    ███▐██▀   ███▄▄▄███   ███    ███ ███    ███ 
+   ▄█████▀    ▀▀▀▀▀▀███   ███    ███ ███    ███ 
+  ▀▀█████▄    ▄██   ███ ▀███████████ ███    ███ 
+    ███▐██▄   ███   ███   ███    ███ ███    ███ 
+    ███ ▀███▄ ███   ███   ███    ███ ███    ███ 
+    ███   ▀█▀  ▀█████▀    ███    █▀   ▀██████▀  
+    ▀                                            
+
+    ╔══════════════════════════════════════════╗
+    ║      FRONTLINES ENHANCED v3.0            ║
+    ║        discord.gg/2rxBDqmd7N             ║
+    ╚══════════════════════════════════════════╝
+]])
