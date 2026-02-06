@@ -9,9 +9,10 @@ local GameData = {
     [5938036553] = {
         Name = "Frontlines",
         Options = {
-            {Title = "Load Frontlines Legacy", Script = "https://raw.githubusercontent.com/vexascripts/Roblox-Scripts/refs/heads/main/FRONTLINES"},
-            {Title = "Load Frontlines Stable", Script = "https://github.com/kyro-scripts/cattohub/blob/main/FrontLines%202"},
-            {Title = "Load Frontlines Beta", Script = "https://github.com/kyro-scripts/cattohub/blob/main/beta"}
+            {Title = "Legacy", Script = "https://raw.githubusercontent.com/vexascripts/Roblox-Scripts/refs/heads/main/FRONTLINES"},
+            -- FIXED RAW LINKS BELOW --
+            {Title = "Stable", Script = "https://raw.githubusercontent.com/kyro-scripts/cattohub/refs/heads/main/FrontLines%202"},
+            {Title = "!Beta!", Script = "https://raw.githubusercontent.com/kyro-scripts/cattohub/refs/heads/main/beta"}
         }
     },
     [136372246050123] = {
