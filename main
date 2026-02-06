@@ -10,7 +10,7 @@ local GameData = {
         Options = {
             {Title = "Legacy", Script = "https://raw.githubusercontent.com/vexascripts/Roblox-Scripts/refs/heads/main/FRONTLINES"},
             -- FIXED RAW LINKS BELOW --
-            {Title = "Stable", Script = "https://raw.githubusercontent.com/kyro-scripts/cattohub/refs/heads/main/FrontLines%202"},
+            {Title = "Stable", Script = "https://raw.githubusercontent.com/catto-kyro/frontlines/refs/heads/main/aimbot"},
             {Title = "!Beta!", Script = "https://raw.githubusercontent.com/kyro-scripts/cattohub/refs/heads/main/beta"}
         }
     },
