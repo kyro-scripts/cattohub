@@ -14,7 +14,7 @@ local Mouse = LocalPlayer:GetMouse()
 
 -- ==================== KEY SYSTEM ====================
 
-local CORRECT_KEY = "KYRO2026"  -- Change this to your desired key
+local CORRECT_KEY = "KyroLol"  -- Change this to your desired key
 local DISCORD_LINK = "https://discord.gg/Mj2p8AFDQj"
 
 -- Create Key System GUI
